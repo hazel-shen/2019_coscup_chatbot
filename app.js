@@ -1,5 +1,4 @@
 'use strict';
-
 const line = require('@line/bot-sdk');
 const express = require('express');
 
@@ -43,7 +42,7 @@ function handleEvent(event) {
       let data = event.postback.data;
       let replyToken = event.replyToken
       let room = data.substring(7,10)
-      handlePostback(data, room, replyToken)
+      handlePostback(data, room, replyToken, user)
       break
     case 'things':
       handleThingsEvent(event)
@@ -74,7 +73,7 @@ function handleThingsEvent(event) {
       break
   }
 }
-function handlePostback (data, room, replyToken) {
+function handlePostback (data, room, replyToken, user) {
   redis_client.get(room, (error, result) => {
     if (result == null || result == "") {
       if (data.substring(0,6) === 'booked') {
