@@ -16,8 +16,8 @@ redis_client.on('connect', () => {
 });
 // create LINE SDK client
 const client = new line.Client(config);
-const AUTO_CANCEL_TIME = 10 * 10000; 
-const BOOKING_TIME =  20 * 1000;
+const AUTO_CANCEL_TIME = 20 * 10000; 
+const BOOKING_TIME =  60 * 1000;
 // create Express app
 // about Express itself: https://expressjs.com/
 const app = express();
@@ -62,10 +62,19 @@ function handleEvent(event) {
     })
   }
   if (event.type === 'things') {
+    let room
+    let deviceId = event.things.deviceId
+    switch(deviceId) {
+      case "t016c1a267d6dd4a777b783ae3033f6f2":
+        room = 501
+        break
+    }
     switch(event.things.type){
       case 'link':
-        checked_in_handle(event.replyToken, user, event.things.deviceId)
+        checked_in(event.replyToken, user, room)
         break
+      case 'unlink':
+        checked_out(event.replyToken, user, room)
     }
   }
   if (event.type === 'message' && event.message.text.substring(4, 11) === "booking") {
@@ -75,16 +84,26 @@ function handleEvent(event) {
   }  
 
 }
-function checked_in_handle(replyToken, user, deviceId) {
-  let room
-  switch(deviceId) {
-    case "t016c1a267d6dd4a777b783ae3033f6f2":
-      room = 501
-      break
-  }
+function checked_in(replyToken, user,  room) {
   redis_client.get(room, (error, result) => {
     if(result === user){
+      redis_client.set(room, user + 'arrived')
       let echo = { type: 'text', text: '您已報到, 會議室:' + room}
+      client.replyMessage(replyToken, echo)
+    } else {
+      let echo = { type: 'text', text: '您尚未訂此間會議室'}
+      client.replyMessage(replyToken, echo)
+    }
+  })
+}
+function checked_out(replyToken, user,  room) {
+  redis_client.get(room, (error, result) => {
+    if(result === user + "arrived") {
+      redis_client.del(room)
+      let echo = { type: 'text', text: '您已釋出會議室:' + room}
+      client.replyMessage(replyToken, echo)
+    } else if (result === user) {
+      let echo = { type: 'text', text: '您尚未報到, 會議室' + room}
       client.replyMessage(replyToken, echo)
     } else {
       let echo = { type: 'text', text: '您尚未訂此間會議室'}
@@ -99,8 +118,8 @@ function book_room(replyToken, room, user) {
   redis_client.set(room, user)
   setTimeout(() => {
     redis_client.get(room, (error, result) => {
-      console.log(user + "超時未報到")      
       if(result != null && result != user + "arrived"){
+        console.log(user + "超時未報到")      
         redis_client.del(room)
         client.pushMessage(user,{ type: 'text', text: room + '的預訂情況為: 已被取消\n原因: 超時未報到'})
       }
@@ -109,8 +128,8 @@ function book_room(replyToken, room, user) {
 
   setTimeout(() => {
     redis_client.get(room, (error, result) => {
-      console.log(user + "超過預訂時間")
       if(result != null && result == user + "arrived"){
+        console.log(user + "超過預訂時間")
         redis_client.del(room)
         client.pushMessage(user,{ type: 'text', text: room + '的預訂情況為: 已被取消\n原因: 超過預訂時間'})
       }
