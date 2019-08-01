@@ -1,0 +1,31 @@
+{
+  "name": "meeting_room_detector",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "@line/bot-sdk": "^6.8.1",
+    "aws-sdk": "^2.337.0",
+    "axios": "^0.19.0",
+    "babel-preset-env": "^1.7.0",
+    "express": "^4.17.1",
+    "linebot": "^1.5.3",
+    "redis": "^2.8.0",
+    "shelljs": "^0.8.2",
+    "websocket": "^1.0.29",
+    "ws": "^7.1.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": " "
+  },
+  "author": "Hazel Shen",
+  "description": ""
+}
