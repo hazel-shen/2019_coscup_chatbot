@@ -122,7 +122,6 @@ function checked_out(replyToken, user,  room) {
     }
   })
 }
-
 function book_room(replyToken, room, user) {
   redis_client.set(room, user)
   setTimeout(() => {
