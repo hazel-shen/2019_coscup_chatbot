@@ -62,7 +62,11 @@ function handleEvent(event) {
     })
   }
   if (event.type === 'things') {
-    console.log(event)
+    switch(event.things.type){
+      case 'link':
+        checked_in_handle(event.replyToken, user, event.things.deviceId)
+        break
+    }
   }
   if (event.type === 'message' && event.message.text.substring(4, 11) === "booking") {
     let text = event.message.text
@@ -70,6 +74,23 @@ function handleEvent(event) {
     handle_room_booking(event.replyToken, room, user)
   }  
 
+}
+function checked_in_handle(replyToken, user, deviceId) {
+  let room
+  switch(deviceId) {
+    case "t016c1a267d6dd4a777b783ae3033f6f2":
+      room = 501
+      break
+  }
+  redis_client.get(room, (error, result) => {
+    if(result === user){
+      let echo = { type: 'text', text: '您已報到, 會議室:' + room}
+      client.replyMessage(replyToken, echo)
+    } else {
+      let echo = { type: 'text', text: '您尚未訂此間會議室'}
+      client.replyMessage(replyToken, echo)
+    }
+  })
 }
 function release_room(room) {
     redis_client.del(room)
