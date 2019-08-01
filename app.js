@@ -41,8 +41,9 @@ function handleEvent(event) {
   switch(event.type) {
     case 'postback':
       let data = event.postback.data;
+      let replyToken = event.replyToken
       let room = data.substring(7,10)
-      handlePostback(data, room)
+      handlePostback(data, room, replyToken)
       break
     case 'things':
       handleThingsEvent(event)
@@ -51,7 +52,7 @@ function handleEvent(event) {
       if (event.message.text.substring(4, 11) === "booking") {
         let text = event.message.text
         let room = text.substring(0,3)
-        handle_room_booking(event.replyToken, room, user)
+        richmenuProcessing(event.replyToken, room, user)
       } 
       break
   }
@@ -66,36 +67,36 @@ function handleThingsEvent(event) {
   }
   switch(event.things.type){
     case 'link':
-      checked_in(event.replyToken, user, room)
+      checkedIn(event.replyToken, user, room)
       break
     case 'unlink':
-      checked_out(event.replyToken, user, room)
+      checkedOut(event.replyToken, user, room)
       break
   }
 }
-function handlePostback (data, room) {
+function handlePostback (data, room, replyToken) {
   redis_client.get(room, (error, result) => {
     if (result == null || result == "") {
       if (data.substring(0,6) === 'booked') {
-        book_room(event.replyToken, room, user)
+        roomBooking(replyToken, room, user)
         let echo = { type: 'text', text: room + " 已預訂"};
-        return client.replyMessage(event.replyToken, echo);
+        return client.replyMessage(replyToken, echo);
       } else {
         let echo = { type: 'text', text: "尚未訂會議室" };
-        return client.replyMessage(event.replyToken, echo);
+        return client.replyMessage(replyToken, echo);
       }
     } else {
       if (data.substring(0,6) === 'cancel' && result === user) {
         redis_client.del(room)
         let echo = { type: 'text', text: room + '的預訂情況為: 已被取消\n原因: 主動取消'};
-        return client.replyMessage(event.replyToken, echo);
+        return client.replyMessage(replyToken, echo);
       }
       let echo = { type: 'text', text: room + '的預訂情況為: 已被人預訂'};
-      return client.replyMessage(event.replyToken, echo);
+      return client.replyMessage(replyToken, echo);
     }
   })
 }
-function checked_in(replyToken, user,  room) {
+function checkedIn(replyToken, user,  room) {
   redis_client.get(room, (error, result) => {
     if(result === user){
       redis_client.set(room, user + 'arrived')
@@ -107,7 +108,7 @@ function checked_in(replyToken, user,  room) {
     }
   })
 }
-function checked_out(replyToken, user,  room) {
+function checkedOut(replyToken, user,  room) {
   redis_client.get(room, (error, result) => {
     if(result === user + "arrived") {
       redis_client.del(room)
@@ -122,7 +123,7 @@ function checked_out(replyToken, user,  room) {
     }
   })
 }
-function book_room(replyToken, room, user) {
+function roomBooking(replyToken, room, user) {
   redis_client.set(room, user)
   setTimeout(() => {
     redis_client.get(room, (error, result) => {
@@ -145,7 +146,7 @@ function book_room(replyToken, room, user) {
   }, BOOKING_TIME) 
 }
 
-function handle_room_booking (replyToken, room, user) {
+function richmenuProcessing (replyToken, room, user) {
   redis_client.get(room, (error, result) => {
     if (result == null || result == "") {
       return client.replyMessage(
