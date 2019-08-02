@@ -45,7 +45,7 @@ function handleEvent(event) {
       handlePostback(data, room, replyToken, user)
       break
     case 'things':
-      handleThingsEvent(event)
+      handleThingsEvent(event, user)
       break
     case 'message':
       if (event.message.text.substring(4, 11) === "booking") {
@@ -56,7 +56,7 @@ function handleEvent(event) {
       break
   }
 }
-function handleThingsEvent(event) {
+function handleThingsEvent(event, user) {
   let room
   let deviceId = event.things.deviceId
   switch(deviceId) {
