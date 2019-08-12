@@ -11,6 +11,8 @@ const config = {
   redisAuth: process.env.REDIS_AUTH,
   deviceIdOne: process.env.DEVICE_ID_ONE,
   roomIdOne: process.env.ROOM_ID_ONE,
+  deviceIdTwo: process.env.DEVICE_ID_TWO,
+  roomIdTwo: process.env.ROOM_ID_TWO,
 };
 const redis = require('redis');
 const redis_client = redis.createClient(config.redisPort, config.redisHost); // this creates a new client
@@ -52,17 +54,20 @@ function handleEvent(event) {
         let text = event.message.text
         let room = text.substring(0,3)
         richmenuProcessing(event.replyToken, room, user)
-      } 
+       }
       break
   }
 }
 function handleThingsEvent(event, user) {
   let room
   let deviceId = event.things.deviceId
+  console.log(deviceId)
   switch(deviceId) {
     case config.deviceIdOne:
       room = config.roomIdOne
       break
+    case config.deviceIdTwo:
+      room = config.roomIdTwo
   }
   switch(event.things.type){
     case 'link':
