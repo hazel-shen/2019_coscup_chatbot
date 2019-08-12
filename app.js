@@ -173,7 +173,7 @@ function richmenuProcessing (replyToken, room, user) {
                     "text":"預訂" + room
                  },
                   "style": "primary",
-                  "color": "#FFCFAD"
+                  "color": "#004D99"
                 },
                 {
                   "type": "button",
@@ -184,7 +184,7 @@ function richmenuProcessing (replyToken, room, user) {
                     "text":"取消預訂" + room
                  },
                   "style": "primary",
-                  "color": "#FFE4B8"
+                  "color": "#A52A2A"
                 }
               ]
             }
