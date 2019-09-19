@@ -51,11 +51,11 @@ function handleEvent(event) {
       break
     case 'message':
       console.log(event)
-      if (event.message.text.substring(4, 11) === "booking") {
-        let text = event.message.text
-        let room = text.substring(0,3)
-        richmenuProcessing(event.replyToken, room, user)
-       }
+      // if (event.message.text.substring(4, 11) === "booking") {
+      //   let text = event.message.text
+      //   let room = text.substring(0,3)
+      //   richmenuProcessing(event.replyToken, room, user)
+      //  }
       break
   }
 }
