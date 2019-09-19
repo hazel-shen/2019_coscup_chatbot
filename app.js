@@ -50,6 +50,7 @@ function handleEvent(event) {
       handleThingsEvent(event, user)
       break
     case 'message':
+      console.loh(event)
       if (event.message.text.substring(4, 11) === "booking") {
         let text = event.message.text
         let room = text.substring(0,3)
