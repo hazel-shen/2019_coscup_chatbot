@@ -56,7 +56,7 @@ function handleEvent(event) {
       //   let room = text.substring(0,3)
       //   richmenuProcessing(event.replyToken, room, user)
       //  }
-      client.replyMessage(event.replyToken, event.message.text)
+      return client.replyMessage(event.replyToken, event.message.text)
       break
   }
 }
