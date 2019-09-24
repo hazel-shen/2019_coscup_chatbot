@@ -39,26 +39,8 @@ app.post('/callback', line.middleware(config), (req, res) => {
 // event handler
 function handleEvent(event) {
   let user = event.source.userId
-  switch(event.type) {
-    case 'postback':
-      let data = event.postback.data;
-      let replyToken = event.replyToken
-      let room = data.substring(7,10)
-      handlePostback(data, room, replyToken, user)
-      break
-    case 'things':
-      handleThingsEvent(event, user)
-      break
-    case 'message':
-      console.log(event)
-      // if (event.message.text.substring(4, 11) === "booking") {
-      //   let text = event.message.text
-      //   let room = text.substring(0,3)
-      //   richmenuProcessing(event.replyToken, room, user)
-      //  }
-      return client.replyMessage(event.replyToken, event.message.text)
-      break
-  }
+  let echo = { type: 'text', text: event.message.text};
+  client.replyMessage(event.replyToken, echo)
 }
 function handleThingsEvent(event, user) {
   let room
