@@ -8,7 +8,7 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "@line/bot-sdk": "^6.8.1",
+    "@line/bot-sdk": "^7.5.2",
     "aws-sdk": "^2.814.0",
     "axios": "^0.21.2",
     "babel-preset-env": "^1.7.0",
