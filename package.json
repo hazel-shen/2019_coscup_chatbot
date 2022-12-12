@@ -12,7 +12,7 @@
     "aws-sdk": "^2.814.0",
     "axios": "^0.21.2",
     "babel-preset-env": "^1.7.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "linebot": "^1.5.3",
     "redis": "^3.1.1",
     "shelljs": "^0.8.5",
