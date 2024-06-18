@@ -17,7 +17,7 @@
     "redis": "^3.1.1",
     "shelljs": "^0.8.5",
     "websocket": "^1.0.29",
-    "ws": "^7.4.6"
+    "ws": "^7.5.10"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0"
